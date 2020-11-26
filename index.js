@@ -125,9 +125,17 @@ function update(){
                 if(randPos == 0){
                     appleLoc = new coordinate(i % (c.width / celSize), Math.floor(i / (c.width / celSize)));
                     appleEaten = false;
-                    return;
+                    break;
                 }
             }
+        }
+    }
+
+    //checking for collision
+    for(let i = 1; i < player.length; i++){
+        if(player.coordinatesArray[0].x == player.coordinatesArray[i].x && player.coordinatesArray[0].y == player.coordinatesArray[i].y){
+            reset();
+            break;
         }
     }
 }
@@ -136,6 +144,8 @@ function update(){
 function draw(){
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, c.width, c.height);
+    ctx.fillStyle = 'red';
+    ctx.fillRect(appleLoc.x * celSize, appleLoc.y * celSize, celSize, celSize);
     for(let i = 0; i < player.coordinatesArray.length; i++){
         if(i == 0){
             ctx.fillStyle = 'white';
@@ -144,13 +154,21 @@ function draw(){
         }
         ctx.fillRect(player.coordinatesArray[i].x * celSize, player.coordinatesArray[i].y * celSize, celSize, celSize);
     }
-    ctx.fillStyle = 'red';
-    ctx.fillRect(appleLoc.x * celSize, appleLoc.y * celSize, celSize, celSize);
+}
+
+//reset function
+function reset(){
+    player.length = 1;
+    player.x = 0;
+    player.y = 0;
+    direction = 'right';
+    player.coordinatesArray = [];
+    player.coordinatesArray.push(new coordinate(player.x, player.y));
 }
 
 //this is called at the beginning
 function setup(){
-    player.coordinatesArray.push(new coordinate(0, 0));
+    player.coordinatesArray.push(new coordinate(player.x, player.y));
     update();
     draw();
     appleEaten = false;
